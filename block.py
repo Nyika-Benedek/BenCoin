@@ -53,17 +53,21 @@ def generateMerkleTree(transactionList, newtransactions):
 #This class represent a block(before it's hashing)
 class Block:
 
-    def __init__(self, preBlock, id, merkleTree):
+    def __init__(self, id, merkleTree):
         self.time = currentDatetime()
         self.nonce = generate_nonce()
         self.merkleRoom = merkleTree
-        self.preBlock = preBlock
         self.id = str(id)
+        #self.id += 1
+    
+    def __str__(self):
+        out = 'transaction '+ self.id + ' with nonce(' + str(self.nonce) + ') at ' + self.time + '\n\t payload hashed content: ' + str(self.merkleRoom)
+        return out
     
     # Generate a hash from the block
     def generateHash(self):
             #concatenate every prop hash
-            result = str(time) + str(self.nonce) + str(self.merkleRoom) + str(self.preBlock) + str(self.id)
+            result = str(time) + str(self.nonce) + str(self.merkleRoom) + str(self.id)
             
             result = hashlib.sha256(result.encode('ascii')).hexdigest()
 

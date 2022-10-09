@@ -1,6 +1,7 @@
 from hashlib import new
 from block import Block
 import block
+from blockChain import BlockChain
 
 transactionList = [
     "A mined 10 coin",
@@ -12,14 +13,34 @@ newTransactions = [
    "B sends 5 coin to A"
 ]
 
+idCounter = 0
+def nextId():
+   global idCounter
+   idCounter += 1
+   return idCounter 
 
 def main():
    #rsa.printAvailableHashAlgrorithm()
    #sha.shaTest()
-   root = block.generateMerkleTree(transactionList, newTransactions)
-   blockchain = Block('asd',1, merkleTree=root)
+
+
+   # generate the first node
+   root = block.generateMerkleTree(transactionList, [])
+   node = Block(nextId(), merkleTree=root)
+
+   # createa new blockchain
+   blockChain = BlockChain(node, node.proofOfWork())
+
+   # adding a new node
+   newRoot = block.generateMerkleTree(transactionList, newTransactions)
+   newNode = Block(nextId(), merkleTree=newRoot)
+   blockChain.addNode(newNode, newNode.proofOfWork())
+
+   # test it content
+   print(blockChain)
    #print(blockchain.proofOfWork())
-   print(root)
+   #print(root)
+
 
 
 
