@@ -96,7 +96,7 @@ class Block:
         #else:
         #    return temp
         #return temp
-        while(temp[0] != '0'):
+        while(temp[:5] != '00000'):
             self.nonce = generate_nonce()
             temp = self.generateHash()
             iterationCounter += 1
