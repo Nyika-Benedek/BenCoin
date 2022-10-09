@@ -11,6 +11,7 @@ import random
 from unittest import result
 from unittest.mock import NonCallableMagicMock
 
+
 #Get the curent datetime
 def currentDatetime():
     now = datetime.now()
@@ -23,18 +24,39 @@ def generate_nonce(length=4):
     # Generate a nonce value(default 4 byte)
     return int.from_bytes(os.urandom(length), byteorder='big')
 
+
+def hashCurrentMerkleLevel(list):
+    out = []
+    for i in range(0, len(list), 2):
+        tmp = list[i] + list[i+1]
+        out.append(hashlib.sha256(tmp.encode('ascii')).hexdigest())
+    
+    return out
+
+
 #Generate merkle Tree
-def generateMerkleTree():
-    # TODO implement merkle
-    return 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+def generateMerkleTree(transactionList, newtransactions):
+    joinedList = transactionList + newtransactions
+
+    # 1. hash every entry
+    for i in range(len(joinedList)):
+        joinedList[i] = hashlib.sha256(joinedList[i].encode('ascii')).hexdigest()
+    
+    # 2. iteratively merge them
+    # TODO asd if its right
+    while(len(joinedList) != 1):
+        joinedList = hashCurrentMerkleLevel(joinedList)
+
+    return joinedList[0]
+
 
 #This class represent a block(before it's hashing)
 class Block:
 
-    def __init__(self, preBlock,id):
+    def __init__(self, preBlock, id, merkleTree):
         self.time = currentDatetime()
         self.nonce = generate_nonce()
-        self.merkleRoom = generateMerkleTree()
+        self.merkleRoom = merkleTree
         self.preBlock = preBlock
         self.id = str(id)
     
