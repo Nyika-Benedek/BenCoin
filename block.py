@@ -10,6 +10,10 @@ from unicodedata import name
 import random
 from unittest import result
 from unittest.mock import NonCallableMagicMock
+import rsa
+
+# This list represents the public transaction list
+publicKeyCollection = []
 
 
 #Get the curent datetime
@@ -38,12 +42,17 @@ def hashCurrentMerkleLevel(list):
 def generateMerkleTree(transactionList, newtransactions):
     joinedList = transactionList + newtransactions
 
-    # 1. hash every entry
+
+    # 1. sign every entry
     for i in range(len(joinedList)):
-        joinedList[i] = hashlib.sha256(joinedList[i].encode('ascii')).hexdigest()
-    
+        # generate rsa keys
+        publicKey, privateKey = rsa.newkeys(1024)
+        publicKeyCollection.append(publicKey)
+
+        #joinedList[i] = hashlib.sha256(joinedList[i].encode('ascii')).hexdigest()
+        joinedList[i] = str(rsa.encrypt(bytes(joinedList[i], 'ascii'), privateKey))
+        
     # 2. iteratively merge them
-    # TODO asd if its right
     while(len(joinedList) != 1):
         joinedList = hashCurrentMerkleLevel(joinedList)
 

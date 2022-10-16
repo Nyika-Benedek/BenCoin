@@ -41,6 +41,11 @@ def main():
    #print(blockchain.proofOfWork())
    #print(root)
 
+   print()
+   print("Public transaction list:")
+   for i in block.publicKeyCollection:
+      print(i)
+
 
 
 
