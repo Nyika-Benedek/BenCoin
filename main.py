@@ -29,12 +29,12 @@ def main():
    node = Block(nextId(), merkleTree=root)
 
    # createa new blockchain
-   blockChain = BlockChain(node, node.proofOfWork())
+   blockChain = BlockChain(node, node.proofOfWork('00000000000000000000'))
 
    # adding a new node
    newRoot = block.generateMerkleTree(transactionList, newTransactions)
    newNode = Block(nextId(), merkleTree=newRoot)
-   blockChain.addNode(newNode, newNode.proofOfWork())
+   blockChain.addNode(newNode, newNode.proofOfWork(blockChain.chain[-1]))
 
    # test it content
    print(blockChain)

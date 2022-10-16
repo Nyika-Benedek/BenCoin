@@ -65,9 +65,9 @@ class Block:
         return out
     
     # Generate a hash from the block
-    def generateHash(self):
+    def generateHash(self, preBlock):
             #concatenate every prop hash
-            result = str(time) + str(self.nonce) + str(self.merkleRoom) + str(self.id)
+            result = str(preBlock) + str(time) + str(self.nonce) + str(self.merkleRoom) + str(self.id)
             
             result = hashlib.sha256(result.encode('ascii')).hexdigest()
 
@@ -86,8 +86,8 @@ class Block:
     
     # call Proof of Work recursively untill match
 
-    def proofOfWork(self) -> str:
-        temp = self.generateHash()
+    def proofOfWork(self, preBlock) -> str:
+        temp = self.generateHash(preBlock)
         iterationCounter = 1
         #print('\n' + temp + '\n')
         #if (temp[0] != '0'):
@@ -98,7 +98,7 @@ class Block:
         #return temp
         while(temp[:5] != '00000'):
             self.nonce = generate_nonce()
-            temp = self.generateHash()
+            temp = self.generateHash(preBlock)
             iterationCounter += 1
         
         print('iterations until first match: ' + str(iterationCounter))
